@@ -1,6 +1,10 @@
+# Proses Pembuatan Dashboard
+
 Catatan :
 
 **Semua program berada pada branch master**
+
+## Prerequisites
 
 Tools yang dibutuhkan :
 
@@ -8,7 +12,17 @@ Tools yang dibutuhkan :
 2. Postgres
 3. Postman
 
-Cara menjalankan program
+## Library pyhton yang dibutuhkan
+
+1. psycopg2
+2. date
+
+## Cara install library python
+
+1. Buka CMD
+2. Ketik --> pip install {nama library}
+
+## Cara menjalankan program
 
 Langkah - Langkah menjalankan program :
 
