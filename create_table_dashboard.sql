@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS public.SASARAN_LIFE_CYCLE_SPM
 
 
 
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
 
     CONSTRAINT SASARAN_LIFE_CYCLE_SPM_pkey PRIMARY KEY (survei_individu_detail_id)
@@ -149,8 +149,8 @@ CREATE TABLE IF NOT EXISTS public.KELUARGA_BERENCANA
 	WANITA_TIDAK_BER_KB int,
 
 
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
 
     CONSTRAINT KELUARGA_BERENCANA_pkey PRIMARY KEY (survei_individu_detail_id)
@@ -278,8 +278,8 @@ CREATE TABLE IF NOT EXISTS public.PERSALINAN_DI_FASKES
 	IBU_DENGAN_ANAK_USIA_0_sd_11_BULAN	int,
 	PERSALINAN_TIDAK_DI_FASKES	int,
 
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
 
     CONSTRAINT PERSALINAN_DI_FASKES_pkey PRIMARY KEY (survei_individu_detail_id)
@@ -365,8 +365,8 @@ CREATE TABLE IF NOT EXISTS public.IMUNISASI_DASAR_LENGKAP
     jenis_kelamin character varying(9) COLLATE pg_catalog."default",
     MEMILIKI_BALITA_12_sd_23_BULAN int,
 	SASARAN_TIDAK_IDL int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT IMUNISASI_DASAR_LENGKAP_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -449,8 +449,8 @@ CREATE TABLE IF NOT EXISTS public.ASI_EKSKLUSIF
     jenis_kelamin character varying(9) COLLATE pg_catalog."default",
     MEMILIKI_BAYI_7_sd_23_BULAN int,
 	SASARAN_TIDAK_ASI_EKSLUSIF int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT ASI_EKSKLUSIF_pkey PRIMARY KEY (survei_individu_detail_id)
 )
@@ -529,8 +529,8 @@ CREATE TABLE IF NOT EXISTS public.TUMBUH_KEMBANG
     jenis_kelamin character varying(9) COLLATE pg_catalog."default",
 	USIA_2_sd_59_BULAN int,
 	SASARAN_TIDAK_PEMANTAUAN_PERTUMBUHAN int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT TUMBUH_KEMBANG_pkey PRIMARY KEY (survei_individu_detail_id)
 )
@@ -612,8 +612,8 @@ CREATE TABLE IF NOT EXISTS public.TB_PARU
 	DIDIAGNOSIS_TAPI_TIDAK_MINUM_OBAT_TB int,
 	PENDERITA_TB_YANG_MINUM_OBAT_SESUAI_STANDAR	int,
 	SUSPEK_TB int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT TB_PARU_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -701,8 +701,8 @@ CREATE TABLE IF NOT EXISTS public.ROKOK
     tgl_lahir date,
     jenis_kelamin character varying(9) COLLATE pg_catalog."default",
 	INDIVIDU_MEROKOK int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT ROKOK_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -777,8 +777,8 @@ CREATE TABLE IF NOT EXISTS public.JKN
     jenis_kelamin character varying(9) COLLATE pg_catalog."default",
 	BELUM_MENJADI_PESERTA_JKN int,
 	PESERTA_JKN	int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT JKN_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -857,8 +857,8 @@ CREATE TABLE IF NOT EXISTS public.PERILAKU_SAB
     tgl_lahir date,
     jenis_kelamin character varying(9) COLLATE pg_catalog."default",
 	IND_SARANA_AIR_BERSIH_TERLINDUNG_PERILAKU int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT PERILAKU_SAB_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -931,8 +931,8 @@ CREATE TABLE IF NOT EXISTS public.PERILAKU_JAMBAN
     tgl_lahir date,
     jenis_kelamin character varying(9) COLLATE pg_catalog."default",
 	IND_PUNYA_JAMBAN_SANITER_PERILAKU int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT PERILAKU_JAMBAN_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -1024,8 +1024,8 @@ CREATE TABLE IF NOT EXISTS public.KARAKTERISTIK_RESPONDEN
     Umur_55_64_tahun	    int,
     Umur_65_tahun_keatas	int,
 
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
 
     CONSTRAINT KARAKTERISTIK_RESPONDEN_pkey PRIMARY KEY (survei_individu_detail_id)
@@ -1180,8 +1180,8 @@ CREATE TABLE IF NOT EXISTS public.Rokok_by_program
 	Perokok_umur_10_sd_18_tahun int,
 	Perokok_umur_15_sd_18_tahun int,
 	Perokok_umur_diatas_15_tahun int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT Rokok_by_program_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -1267,8 +1267,8 @@ CREATE TABLE IF NOT EXISTS public.Rokok_by_program_umur
 	Jumlah_umur_10_sd_18_tahun int,
 	Jumlah_umur_15_sd_18_tahun int,
 	Jumlah_umur_diatas_15_tahun int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT Rokok_by_program_umur_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -1353,8 +1353,8 @@ CREATE TABLE IF NOT EXISTS public.Denominator_KB
 	WANITA_KAWIN_TIDAK_HAMIL_UMUR_10_sd_14 int,
 	WANITA_KAWIN_TIDAK_HAMIL_UMUR_15_sd_49 int,
 	WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54 int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT Denominator_KB_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -1444,8 +1444,8 @@ CREATE TABLE IF NOT EXISTS public.KB_by_program
 	WANITA_KAWIN_TIDAK_HAMIL_UMUR_10_sd_14_TIDAK_BER_sd_KB int,
 	WANITA_KAWIN_TIDAK_HAMIL_UMUR_15_sd_49_TIDAK_BER_sd_KB int,
 	WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_TIDAK_BER_sd_KB int,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     CONSTRAINT KB_by_program_pkey PRIMARY KEY (survei_individu_detail_id)
 
@@ -1560,8 +1560,8 @@ CREATE TABLE IF NOT EXISTS public.HIPERTENSI
     SUSPEK_TEKANAN_DARAH_TINGGI	int,
 
 
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
 
     CONSTRAINT HIPERTENSI_pkey PRIMARY KEY (survei_individu_detail_id)
@@ -1668,8 +1668,8 @@ CREATE TABLE IF NOT EXISTS public.ROKOKS
     Umur_65_tahun_keatas	int,
 
 
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
 
     CONSTRAINT ROKOKS_pkey PRIMARY KEY (survei_individu_detail_id)

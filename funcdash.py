@@ -1,11 +1,13 @@
 import psycopg2
 
+import time
+
 # ==============================
 #       Connect to DB
 # ==============================
 
 def connectDB():
-    db_conn = psycopg2.connect("dbname=iks_v3 user=postgres password=pacific1904")
+    db_conn = psycopg2.connect("dbname=dashboard user=postgres password=pacific1904")
     cursor = db_conn.cursor()
     return (db_conn, cursor)
 
@@ -38,7 +40,7 @@ def checkIdSurveiIndividu(cursor, id_individu): # fungsi untuk memeriksa apakah 
 #         Template Data
 # ==============================
 
-def templateData(cursor, id_individu, current_date): # fungsi ini untuk ambil template data
+def templateData(cursor, id_individu, date): # fungsi ini untuk ambil template data
     select_Query = '''SELECT 
         survei_individu_survei_individu_detail_id, 
         survei_rt_survei_rt_id,
@@ -83,7 +85,7 @@ def templateData(cursor, id_individu, current_date): # fungsi ini untuk ambil te
         'nama': query_Result[13],
         'tgl_lahir': query_Result[14],
         'jenis_kelamin': jenis_kelamin,
-        "created_at": current_date
+        "created_at": time.strftime("%a, %d %b %Y %H:%M:%S")
     }
     # data yang terambil akan disimpan pada tipe data dictionary
     return (constant_dict) # mengembalikan nilai pada variabel dict
@@ -123,7 +125,7 @@ def specificDataForSasaranLifeCycleSpm(cursor, id): # fungsi ini untuk tambahan 
 
 def insertDataSasaranLifeCycleSpm(db_conn, cursor, sasaran_life_cycle_spm): # fungsi ini untuk insert data pada table SASARAN LIFE CYCLE SPM
 
-    sql_insert_sasaran_life_cycle_spm = "INSERT INTO public.sasaran_life_cycle_spm values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_sasaran_life_cycle_spm = "INSERT INTO public.sasaran_life_cycle_spm values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                         "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                         "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                         "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -132,7 +134,7 @@ def insertDataSasaranLifeCycleSpm(db_conn, cursor, sasaran_life_cycle_spm): # fu
                                         "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, hamil = excluded.hamil, " \
                                         "usia_0_sd_59_bulan = excluded.usia_0_sd_59_bulan,	usia_7_sd_15_tahun = excluded.usia_7_sd_15_tahun, " \
                                         "usia_15_sd_59_tahun = excluded.usia_15_sd_59_tahun, usia_lbh_dari_60_tahun = excluded.usia_lbh_dari_60_tahun, " \
-                                        "created_at = excluded.created_at;"
+                                        "updated_at = excluded.updated_at;"
 
     if sasaran_life_cycle_spm['wanita_usia_hamil'] == 'Y':
         hamil = 1
@@ -176,6 +178,7 @@ def insertDataSasaranLifeCycleSpm(db_conn, cursor, sasaran_life_cycle_spm): # fu
         usia_7_sd_15_tahun,
         usia_15_sd_59_tahun,
         usia_lbh_dari_60_tahun,
+        sasaran_life_cycle_spm['created_at'],
         sasaran_life_cycle_spm['created_at']
     )
 
@@ -206,7 +209,7 @@ def specificDataForKeluargaBerencana(cursor, id):
 
 def insertDataKeluargaBerencana(db_conn, cursor, keluarga_berencana):
 
-    sql_insert_keluarga_berencana = "INSERT INTO public.keluarga_berencana values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) " \
+    sql_insert_keluarga_berencana = "INSERT INTO public.keluarga_berencana values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) " \
                                     "ON CONFLICT (survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                     "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                     "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -219,7 +222,7 @@ def insertDataKeluargaBerencana(db_conn, cursor, keluarga_berencana):
                                     "wanita_usia_10_sd_54_sudah_kawin_tidak_hamil = excluded.wanita_usia_10_sd_54_sudah_kawin_tidak_hamil, " \
                                     "wanita_usia_10_sd_54_sudah_kawin_tidak_hamil_ber_kb = excluded.wanita_usia_10_sd_54_sudah_kawin_tidak_hamil_ber_kb," \
                                     "wanita_usia_10_sd_54_sudahkawin_tidak_hamil_tidak_berkb = excluded.wanita_usia_10_sd_54_sudahkawin_tidak_hamil_tidak_berkb, " \
-                                    "wanita_ber_kb = excluded.wanita_ber_kb, wanita_tidak_ber_kb = excluded.wanita_tidak_ber_kb, created_at = excluded.created_at;"
+                                    "wanita_ber_kb = excluded.wanita_ber_kb, wanita_tidak_ber_kb = excluded.wanita_tidak_ber_kb, updated_at = excluded.updated_at;"
 
     usia_lebih_dari_10_tahun = 0
     usia_10_sd_54 = 0
@@ -280,6 +283,7 @@ def insertDataKeluargaBerencana(db_conn, cursor, keluarga_berencana):
         wanita_usia_10_sd_54_sudahkawin_tidak_hamil_tidak_berkb,
         wanita_ber_kb,
         wanita_tidak_ber_kb,
+        keluarga_berencana['created_at'],
         keluarga_berencana['created_at']
     )
 
@@ -314,7 +318,7 @@ def insertDataPersalinanDiFaskes(db_conn, cursor, persalinan_di_faskes):
                                       "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                                       "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, " \
                                       "ibu_dengan_anak_usia_0_sd_11_bulan = excluded.ibu_dengan_anak_usia_0_sd_11_bulan, " \
-                                      "persalinan_tidak_di_faskes = excluded.persalinan_tidak_di_faskes, created_at = excluded.created_at;"
+                                      "persalinan_tidak_di_faskes = excluded.persalinan_tidak_di_faskes, updated_at = excluded.updated_at;"
 
     ibu_dengan_anak_usia_0_sd_11_bulan = 0
     persalinan_tidak_di_faskes = 0
@@ -392,7 +396,7 @@ def specificDataForIDL(cursor, id):
     return dictIDL
 
 def insertDataIDL(db_conn, cursor, imunisasi_dasar_lengkap):
-    sql_insert_imunisasi_dasar_lengkap = "INSERT INTO public.imunisasi_dasar_lengkap values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_imunisasi_dasar_lengkap = "INSERT INTO public.imunisasi_dasar_lengkap values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                          "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                          "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                          "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -400,7 +404,7 @@ def insertDataIDL(db_conn, cursor, imunisasi_dasar_lengkap):
                                          "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                                          "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, memiliki_balita_12_sd_23_bulan = excluded.memiliki_balita_12_sd_23_bulan, " \
                                          "sasaran_tidak_idl = excluded.sasaran_tidak_idl, " \
-                                         "created_at = excluded.created_at;"
+                                         "updated_at = excluded.updated_at;"
 
     val = (
         imunisasi_dasar_lengkap['survei_individu_detail_id'],
@@ -421,6 +425,7 @@ def insertDataIDL(db_conn, cursor, imunisasi_dasar_lengkap):
         imunisasi_dasar_lengkap['jenis_kelamin'],
         imunisasi_dasar_lengkap['MEMILIKI_BALITA_12_sd_23_BULAN'],
         imunisasi_dasar_lengkap['SASARAN_TIDAK_IDL'],
+        imunisasi_dasar_lengkap['created_at'],
         imunisasi_dasar_lengkap['created_at']
     )
 
@@ -471,7 +476,7 @@ def specificDataForAsiEksklusif(cursor, id):
     return dictAsiEksklusif
 
 def insertDataAsiEksklusif(db_conn, cursor, Asi_Eksklusif):
-    sql_insert_Asi_Eksklusif = "INSERT INTO public.asi_eksklusif values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_Asi_Eksklusif = "INSERT INTO public.asi_eksklusif values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -479,7 +484,7 @@ def insertDataAsiEksklusif(db_conn, cursor, Asi_Eksklusif):
                                "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                                "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, MEMILIKI_BAYI_7_sd_23_BULAN = excluded.MEMILIKI_BAYI_7_sd_23_BULAN, " \
                                "SASARAN_TIDAK_ASI_EKSLUSIF = excluded.SASARAN_TIDAK_ASI_EKSLUSIF, " \
-                               "created_at = excluded.created_at;"
+                               "updated_at = excluded.updated_at;"
 
     val = (
         Asi_Eksklusif['survei_individu_detail_id'],
@@ -500,6 +505,7 @@ def insertDataAsiEksklusif(db_conn, cursor, Asi_Eksklusif):
         Asi_Eksklusif['jenis_kelamin'],
         Asi_Eksklusif['MEMILIKI_BAYI_7_sd_23_BULAN'],
         Asi_Eksklusif['SASARAN_TIDAK_ASI_EKSLUSIF'],
+        Asi_Eksklusif['created_at'],
         Asi_Eksklusif['created_at']
     )
 
@@ -549,7 +555,7 @@ def specificDataForTumbuhKembang(cursor, id):
     return dict_Tumbuh_Kembang
 
 def insertDataTumbuhKembang(db_conn, cursor, tumbuh_kembang):
-    sql_insert_Tumbuh_Kembang = "INSERT INTO public.tumbuh_kembang values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_Tumbuh_Kembang = "INSERT INTO public.tumbuh_kembang values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                 "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                 "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                 "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -557,7 +563,7 @@ def insertDataTumbuhKembang(db_conn, cursor, tumbuh_kembang):
                                 "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                                 "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, USIA_2_sd_59_BULAN = excluded.USIA_2_sd_59_BULAN, " \
                                 "SASARAN_TIDAK_PEMANTAUAN_PERTUMBUHAN = excluded.SASARAN_TIDAK_PEMANTAUAN_PERTUMBUHAN, " \
-                                "created_at = excluded.created_at;"
+                                "updated_at = excluded.updated_at;"
 
     val = (
         tumbuh_kembang['survei_individu_detail_id'],
@@ -578,6 +584,7 @@ def insertDataTumbuhKembang(db_conn, cursor, tumbuh_kembang):
         tumbuh_kembang['jenis_kelamin'],
         tumbuh_kembang['USIA_2_sd_59_BULAN'],
         tumbuh_kembang['SASARAN_TIDAK_PEMANTAUAN_PERTUMBUHAN'],
+        tumbuh_kembang['created_at'],
         tumbuh_kembang['created_at']
     )
 
@@ -646,7 +653,7 @@ def specificDataForTBParu(cursor, id):
     return dict_TB_Paru
 
 def insertDataTBParu(db_conn, cursor, TB_Paru):
-    sql_insert_TB_Paru = "INSERT INTO public.tb_paru values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_TB_Paru = "INSERT INTO public.tb_paru values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                          "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                          "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                          "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -655,7 +662,7 @@ def insertDataTBParu(db_conn, cursor, TB_Paru):
                          "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, lebih_dari_sama_dengan_15_TAHUN = excluded.lebih_dari_sama_dengan_15_TAHUN, " \
                          "DIDIAGNOSIS_TB = excluded.DIDIAGNOSIS_TB,	DIDIAGNOSIS_TAPI_TIDAK_MINUM_OBAT_TB = excluded.DIDIAGNOSIS_TAPI_TIDAK_MINUM_OBAT_TB, " \
                          "PENDERITA_TB_YANG_MINUM_OBAT_SESUAI_STANDAR = excluded.PENDERITA_TB_YANG_MINUM_OBAT_SESUAI_STANDAR, SUSPEK_TB = excluded.SUSPEK_TB, " \
-                         "created_at = excluded.created_at;"
+                         "updated_at = excluded.updated_at;"
 
     val = (
         TB_Paru['survei_individu_detail_id'],
@@ -679,6 +686,7 @@ def insertDataTBParu(db_conn, cursor, TB_Paru):
         TB_Paru["DIDIAGNOSIS_TAPI_TIDAK_MINUM_OBAT_TB"],
         TB_Paru["PENDERITA_TB_YANG_MINUM_OBAT_SESUAI_STANDAR"],
         TB_Paru["SUSPEK_TB"],
+        TB_Paru['created_at'],
         TB_Paru['created_at']
     )
 
@@ -758,7 +766,7 @@ def specificDataForHipertensi(cursor, id):
 
 
 def insertDataHipertensi(db_conn, cursor, Hipertensi):
-    sql_insert_Hipertensi = "INSERT INTO public.HIPERTENSI values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_Hipertensi = "INSERT INTO public.HIPERTENSI values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                             "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                             "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                             "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -767,7 +775,7 @@ def insertDataHipertensi(db_conn, cursor, Hipertensi):
                             "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, DIDIAGNOSIS_HIPERTENSI = excluded.DIDIAGNOSIS_HIPERTENSI, " \
                             "INDIVIDU_DIDIAGNOSIS_TAPI_TIDAK_MINUM_OBAT_HIPERTENSI = excluded.INDIVIDU_DIDIAGNOSIS_TAPI_TIDAK_MINUM_OBAT_HIPERTENSI,	INDIVIDU_DIDIAGNOSIS_HIPERTENSI_MINUM_OBAT_SESUAI_STANDAR = excluded.INDIVIDU_DIDIAGNOSIS_HIPERTENSI_MINUM_OBAT_SESUAI_STANDAR, " \
                             "DIUKUR_TEKANAN_DARAH = excluded.DIUKUR_TEKANAN_DARAH, SISTOL = excluded.SISTOL, DIASTOL = excluded.DIASTOL, " \
-                            "SUSPEK_TEKANAN_DARAH_TINGGI = excluded.SUSPEK_TEKANAN_DARAH_TINGGI, created_at = excluded.created_at;"
+                            "SUSPEK_TEKANAN_DARAH_TINGGI = excluded.SUSPEK_TEKANAN_DARAH_TINGGI, updated_at = excluded.updated_at;"
 
     val = (
         Hipertensi['survei_individu_detail_id'],
@@ -793,6 +801,7 @@ def insertDataHipertensi(db_conn, cursor, Hipertensi):
         Hipertensi["SISTOL"],
         Hipertensi["DIASTOL"],
         Hipertensi["SUSPEK_TEKANAN_DARAH_TINGGI"],
+        Hipertensi['created_at'],
         Hipertensi['created_at']
     )
 
@@ -829,14 +838,14 @@ def specificDataForRokok(cursor, id):
     return dict_Rokok
 
 def insertDataRokok(db_conn, cursor, Rokok):
-    sql_insert_Rokok = "INSERT INTO public.rokok values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_Rokok = "INSERT INTO public.rokok values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                        "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                        "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                        "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
                        "kecamatan_id = excluded.kecamatan_id, nama_kecamatan = excluded.nama_kecamatan, kelurahan_id = excluded.kelurahan_id, " \
                        "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                        "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, INDIVIDU_MEROKOK = excluded.INDIVIDU_MEROKOK, " \
-                       "created_at = excluded.created_at;"
+                       "updated_at = excluded.updated_at;"
 
     val = (
         Rokok['survei_individu_detail_id'],
@@ -856,6 +865,7 @@ def insertDataRokok(db_conn, cursor, Rokok):
         Rokok['tgl_lahir'],
         Rokok['jenis_kelamin'],
         Rokok['INDIVIDU_MEROKOK'],
+        Rokok['created_at'],
         Rokok['created_at']
     )
 
@@ -896,7 +906,7 @@ def specificDataForJKN(cursor, id):
     return dict_JKN
 
 def insertDataJKN(db_conn, cursor, JKN):
-    sql_insert_JKN = "INSERT INTO public.jkn values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_JKN = "INSERT INTO public.jkn values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                      "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                      "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                      "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -904,7 +914,7 @@ def insertDataJKN(db_conn, cursor, JKN):
                      "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                      "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, BELUM_MENJADI_PESERTA_JKN = excluded.BELUM_MENJADI_PESERTA_JKN, " \
                      "PESERTA_JKN = excluded.PESERTA_JKN, " \
-                     "created_at = excluded.created_at;"
+                     "updated_at = excluded.updated_at;"
 
     val = (
         JKN['survei_individu_detail_id'],
@@ -925,6 +935,7 @@ def insertDataJKN(db_conn, cursor, JKN):
         JKN['jenis_kelamin'],
         JKN['BELUM_MENJADI_PESERTA_JKN'],
         JKN['PESERTA_JKN'],
+        JKN['created_at'],
         JKN['created_at']
     )
 
@@ -963,14 +974,14 @@ def specificDataForPerilakuSAB(cursor, id):
     return dict_Perilaku_SAB
 
 def insertDataPerilakuSAB(db_conn, cursor, Perilaku_SAB):
-    sql_insert_Perilaku_SAB = "INSERT INTO public.perilaku_sab values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_Perilaku_SAB = "INSERT INTO public.perilaku_sab values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                               "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                               "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                               "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
                               "kecamatan_id = excluded.kecamatan_id, nama_kecamatan = excluded.nama_kecamatan, kelurahan_id = excluded.kelurahan_id, " \
                               "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                               "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, IND_SARANA_AIR_BERSIH_TERLINDUNG_PERILAKU = excluded.IND_SARANA_AIR_BERSIH_TERLINDUNG_PERILAKU, " \
-                              "created_at = excluded.created_at;"
+                              "updated_at = excluded.updated_at;"
 
     val = (
         Perilaku_SAB['survei_individu_detail_id'],
@@ -990,6 +1001,7 @@ def insertDataPerilakuSAB(db_conn, cursor, Perilaku_SAB):
         Perilaku_SAB['tgl_lahir'],
         Perilaku_SAB['jenis_kelamin'],
         Perilaku_SAB['IND_SARANA_AIR_BERSIH_TERLINDUNG_PERILAKU'],
+        Perilaku_SAB['created_at'],
         Perilaku_SAB['created_at']
     )
 
@@ -1028,14 +1040,14 @@ def specificDataForPerilakuJamban(cursor, id):
     return dict_Perilaku_Jamban
 
 def insertDataPerilakuJamban(db_conn, cursor, Perilaku_Jamban):
-    sql_insert_Perilaku_Jamban = "INSERT INTO public.perilaku_jamban values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_Perilaku_Jamban = "INSERT INTO public.perilaku_jamban values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                  "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                  "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                  "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
                                  "kecamatan_id = excluded.kecamatan_id, nama_kecamatan = excluded.nama_kecamatan, kelurahan_id = excluded.kelurahan_id, " \
                                  "nama_kelurahan = excluded.nama_kelurahan,	kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                                  "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, IND_PUNYA_JAMBAN_SANITER_PERILAKU = excluded.IND_PUNYA_JAMBAN_SANITER_PERILAKU, " \
-                                 "created_at = excluded.created_at;"
+                                 "updated_at = excluded.updated_at;"
 
     val = (
         Perilaku_Jamban['survei_individu_detail_id'],
@@ -1055,6 +1067,7 @@ def insertDataPerilakuJamban(db_conn, cursor, Perilaku_Jamban):
         Perilaku_Jamban['tgl_lahir'],
         Perilaku_Jamban['jenis_kelamin'],
         Perilaku_Jamban['IND_PUNYA_JAMBAN_SANITER_PERILAKU'],
+        Perilaku_Jamban['created_at'],
         Perilaku_Jamban['created_at']
     )
 
@@ -1088,9 +1101,9 @@ def specificDataKarakteristikResponden(cursor, id):  # fungsi ini untuk tambahan
 
     return dictKarakteristikResponden  # mengembalikan nilai tambahan data untuk table Karakteristik Responden
 
-def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden):  # fungsi ini untuk insert data pada table Karakteristik Responden
+def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, current_date):  # fungsi ini untuk insert data pada table Karakteristik Responden
 
-    sql_insert_karakteristik_responden = "INSERT INTO public.karakteristik_responden values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT " \
+    sql_insert_karakteristik_responden = "INSERT INTO public.karakteristik_responden values (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT " \
                                          "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                          "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                          "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -1103,7 +1116,7 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden): 
                                          "umur_5_sd_9_tahun = excluded.umur_5_sd_9_tahun, umur_10_sd_14_tahun = excluded.umur_10_sd_14_tahun, " \
                                          "umur_15_24_tahun = excluded.umur_15_24_tahun, umur_25_34_tahun = excluded.umur_25_34_tahun, " \
                                          "umur_35_44_tahun = excluded.umur_35_44_tahun, umur_45_54_tahun = excluded.umur_45_54_tahun, " \
-                                         "umur_55_64_tahun = excluded.umur_55_64_tahun, umur_65_tahun_keatas = excluded.umur_65_tahun_keatas, created_at = excluded.created_at;"
+                                         "umur_55_64_tahun = excluded.umur_55_64_tahun, umur_65_tahun_keatas = excluded.umur_65_tahun_keatas, updated_at = excluded.updated_at;"
 
 
     # print(karakteristik_responden['tanggal_lahir'])
@@ -1112,7 +1125,8 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden): 
 
     # Field UMUR HARI INI (TAHUN)
     if karakteristik_responden['umur_tahun'] != 0:
-        umur_hari_ini = (karakteristik_responden['created_at'].year - karakteristik_responden['tanggal_lahir'].year)
+        umur_hari_ini = (current_date.year - karakteristik_responden['tanggal_lahir'].year)
+        # umur_hari_ini = 0
     else:
         umur_hari_ini = 0
 
@@ -1281,6 +1295,7 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden): 
         umur_45_sd_54_tahun,
         umur_55_sd_64_tahun,
         umur_65_tahun_keatas,
+        karakteristik_responden['created_at'],
         karakteristik_responden['created_at']
     )
 
@@ -1369,7 +1384,7 @@ def specificDataForROKOkS(cursor, id_individu):
 
 
 def insertDataROKOkS(db_conn, cursor, ROKOkS):
-    sql_insert_ROKOkS = "INSERT INTO public.ROKOkS values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_ROKOkS = "INSERT INTO public.ROKOkS values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                         "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                         "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                         "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -1379,7 +1394,7 @@ def insertDataROKOkS(db_conn, cursor, ROKOkS):
                         "Umur_10_14_tahun = excluded.Umur_10_14_tahun,	Umur_15_24_tahun = excluded.Umur_15_24_tahun, " \
                         "Umur_25_34_tahun = excluded.Umur_25_34_tahun, Umur_35_44_tahun = excluded.Umur_35_44_tahun, " \
                         "Umur_45_54_tahun = excluded.Umur_45_54_tahun, Umur_55_64_tahun = excluded.Umur_55_64_tahun, " \
-                        "Umur_65_tahun_keatas = excluded.Umur_65_tahun_keatas, created_at = excluded.created_at;"
+                        "Umur_65_tahun_keatas = excluded.Umur_65_tahun_keatas, updated_at = excluded.updated_at;"
 
     val = (
         ROKOkS['survei_individu_detail_id'],
@@ -1406,6 +1421,7 @@ def insertDataROKOkS(db_conn, cursor, ROKOkS):
         ROKOkS["Umur_45_54_tahun"],
         ROKOkS["Umur_55_64_tahun"],
         ROKOkS["Umur_65_tahun_keatas"],
+        ROKOkS['created_at'],
         ROKOkS['created_at']
     )
 
@@ -1436,7 +1452,7 @@ def specificDataForRokokByProgram(cursor, id):
 
 def insertDataRokokByProgram(db_conn, cursor, rokok_by_program):  # fungsi ini untuk insert data pada table SASARAN LIFE CYCLE SPM
 
-    sql_insert_rokok_by_program = "INSERT INTO public.rokok_by_program values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_rokok_by_program = "INSERT INTO public.rokok_by_program values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                   "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                   "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                   "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -1444,7 +1460,7 @@ def insertDataRokokByProgram(db_conn, cursor, rokok_by_program):  # fungsi ini u
                                   "nama_kelurahan = excluded.nama_kelurahan, kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama , " \
                                   "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, perokok_umur_10_sd_18_tahun = excluded.perokok_umur_10_sd_18_tahun, " \
                                   "perokok_umur_15_sd_18_tahun = excluded.perokok_umur_15_sd_18_tahun, perokok_umur_diatas_15_tahun = excluded.perokok_umur_diatas_15_tahun, " \
-                                  "created_at = excluded.created_at;"
+                                  "updated_at = excluded.updated_at;"
 
     perokok_umur_10_sd_18_tahun = 0
     perokok_umur_15_sd_18_tahun = 0
@@ -1477,6 +1493,7 @@ def insertDataRokokByProgram(db_conn, cursor, rokok_by_program):  # fungsi ini u
         perokok_umur_10_sd_18_tahun,
         perokok_umur_15_sd_18_tahun,
         perokok_umur_lebih_besar_15_tahun,
+        rokok_by_program['created_at'],
         rokok_by_program['created_at']
     )
 
@@ -1504,7 +1521,7 @@ def specificDataForRokokByProgramUmur(cursor, id):
 
 def insertDataRokokByProgramUmur(db_conn, cursor, rokok_by_program_umur):  # fungsi ini untuk insert data pada table SASARAN LIFE CYCLE SPM
 
-    sql_insert_rokok_by_program_umur = "INSERT INTO public.rokok_by_program_umur values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_rokok_by_program_umur = "INSERT INTO public.rokok_by_program_umur values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                        "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                        "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                        "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -1512,7 +1529,7 @@ def insertDataRokokByProgramUmur(db_conn, cursor, rokok_by_program_umur):  # fun
                                        "nama_kelurahan = excluded.nama_kelurahan, kd_puskesmas = excluded.kd_puskesmas, nik = excluded.nik , nama = excluded.nama, " \
                                        "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, jumlah_umur_10_sd_18_tahun = excluded.jumlah_umur_10_sd_18_tahun, " \
                                        "jumlah_umur_15_sd_18_tahun = excluded.jumlah_umur_15_sd_18_tahun, jumlah_umur_diatas_15_tahun = excluded.jumlah_umur_diatas_15_tahun, " \
-                                       "created_at = excluded.created_at;"
+                                       "updated_at = excluded.updated_at;"
 
     umur_10_sd_18_tahun = 0
     umur_15_sd_18_tahun = 0
@@ -1545,6 +1562,7 @@ def insertDataRokokByProgramUmur(db_conn, cursor, rokok_by_program_umur):  # fun
         umur_10_sd_18_tahun,
         umur_15_sd_18_tahun,
         umur_lebih_besar_15_tahun,
+        rokok_by_program_umur['created_at'],
         rokok_by_program_umur['created_at']
     )
 
@@ -1573,7 +1591,7 @@ def specificDataForDenominatorKB(cursor, id):
     return dictDenominatorKB
 
 def insertDataDenominatorKB(db_conn, cursor, denominator_KB):
-    sql_insert_rokok_by_denominator_KB = "INSERT INTO public.denominator_kb values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_rokok_by_denominator_KB = "INSERT INTO public.denominator_kb values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                        "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                        "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                        "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -1582,7 +1600,7 @@ def insertDataDenominatorKB(db_conn, cursor, denominator_KB):
                                        "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, wanita_kawin_tidak_hamil_umur_10_sd_14 = excluded.wanita_kawin_tidak_hamil_umur_10_sd_14, " \
                                        "wanita_kawin_tidak_hamil_umur_15_sd_49 = excluded.wanita_kawin_tidak_hamil_umur_15_sd_49, " \
                                         "wanita_kawin_tidak_hamil_umur_50_sd_54 = excluded.wanita_kawin_tidak_hamil_umur_50_sd_54, " \
-                                       "created_at = excluded.created_at;"
+                                       "updated_at = excluded.updated_at;"
 
     wanita_kawin_tidak_hamil_umur_10_sd_14 = 0
     wanita_kawin_tidak_hamil_umur_15_sd_49 = 0
@@ -1620,6 +1638,7 @@ def insertDataDenominatorKB(db_conn, cursor, denominator_KB):
             wanita_kawin_tidak_hamil_umur_10_sd_14,
             wanita_kawin_tidak_hamil_umur_15_sd_49,
             wanita_kawin_tidak_hamil_umur_50_sd_54,
+            denominator_KB['created_at'],
             denominator_KB['created_at']
         )
             # variabel val adalah data yang akan di input
@@ -1704,7 +1723,7 @@ def specificDataForKBbyProgram(cursor, id):
     return dict_KB_by_Program
 
 def insertDataKBbyProgram(db_conn, cursor, KB_by_Program):
-    sql_insert_KB_by_Program = "INSERT INTO public.KB_by_Program values (%s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
+    sql_insert_KB_by_Program = "INSERT INTO public.KB_by_Program values (%s,%s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT " \
                                "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -1713,7 +1732,7 @@ def insertDataKBbyProgram(db_conn, cursor, KB_by_Program):
                                "tgl_lahir = excluded.tgl_lahir, jenis_kelamin = excluded.jenis_kelamin, WANITA_KAWIN_TIDAK_HAMIL_UMUR_10_sd_14_BER_sd_KB = excluded.WANITA_KAWIN_TIDAK_HAMIL_UMUR_10_sd_14_BER_sd_KB, " \
                                "WANITA_KAWIN_TIDAK_HAMIL_UMUR_15_sd_49_BER_sd_KB = excluded.WANITA_KAWIN_TIDAK_HAMIL_UMUR_15_sd_49_BER_sd_KB,	WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_BER_sd_KB = excluded.WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_BER_sd_KB, " \
                                "WANITA_KAWIN_TIDAK_HAMIL_UMUR_10_sd_14_TIDAK_BER_sd_KB = excluded.WANITA_KAWIN_TIDAK_HAMIL_UMUR_10_sd_14_TIDAK_BER_sd_KB, WANITA_KAWIN_TIDAK_HAMIL_UMUR_15_sd_49_TIDAK_BER_sd_KB = excluded.WANITA_KAWIN_TIDAK_HAMIL_UMUR_15_sd_49_TIDAK_BER_sd_KB, " \
-                               "WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_TIDAK_BER_sd_KB = excluded.WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_TIDAK_BER_sd_KB, created_at = excluded.created_at;"
+                               "WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_TIDAK_BER_sd_KB = excluded.WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_TIDAK_BER_sd_KB, updated_at = excluded.updated_at;"
 
     val = (
         KB_by_Program['survei_individu_detail_id'],
@@ -1738,6 +1757,7 @@ def insertDataKBbyProgram(db_conn, cursor, KB_by_Program):
         KB_by_Program["WANITA_KAWIN_TIDAK_HAMIL_UMUR_10_sd_14_TIDAK_BER_sd_KB"],
         KB_by_Program["WANITA_KAWIN_TIDAK_HAMIL_UMUR_15_sd_49_TIDAK_BER_sd_KB"],
         KB_by_Program["WANITA_KAWIN_TIDAK_HAMIL_UMUR_50_sd_54_TIDAK_BER_sd_KB"],
+        KB_by_Program['created_at'],
         KB_by_Program['created_at']
     )
 
