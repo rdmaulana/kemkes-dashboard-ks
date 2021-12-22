@@ -176,7 +176,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_tidak_ada):
 
         karakteristik_responden = gabungData(template_data, data_for_karakteristik_responden)
 
-        insert_karakteristik_responden = insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden)
+        insert_karakteristik_responden = insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, current_date)
 
         #     Created By Aldi
 
