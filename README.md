@@ -37,3 +37,10 @@ Langkah - Langkah menjalankan program :
 
     1 id yang diproses = ['acc44eb7-2f0d-5f10-88b4-f357e9f289f1']
     2 id yang tidak dapat diproses = ['ae', 'ed']
+
+## Maintainer
+Aldon Manuel ( [GitHub](https://github.com/aldonmanuel) | [GitLab](https://gitlab.com/aldonmanuel) )
+
+## Acknowledgements
+- Andreas Hadiyono ( [GitLab](https://gitlab.com/Hadiyono) )
+- Fikri Fadlillah ( [GitLab](https://gitlab.com/fikrifadlillah) )
