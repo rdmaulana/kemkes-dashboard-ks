@@ -1,11 +1,11 @@
+# Proses Pembuatan Dashboard
+
 ## Maintainer
 Aldon Manuel ( [GitHub](https://github.com/aldonmanuel) | [GitLab](https://gitlab.com/aldonmanuel) )
 
 ## Acknowledgements
 - Andreas Hadiyono ( [GitLab](https://gitlab.com/Hadiyono) )
 - Fikri Fadlillah ( [GitLab](https://gitlab.com/fikrifadlillah) )
-
-# Proses Pembuatan Dashboard
 
 Catatan :
 
