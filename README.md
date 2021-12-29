@@ -33,12 +33,12 @@ Tools yang dibutuhkan :
 
 Langkah - Langkah menjalankan program :
 
-1. Buatlah sebuah database dengan nama tertentu (disarankan = iks_v3).
-2. Jalankan script sql pada file create_table_dashboard.sql pada database tersebut. (Jika blm ada table-table dashboard)
-3. Jalankan script sql pada folder raw survei (Jika belum ada tabel raw survei):
+1. Buatlah sebuah database di postgres sql dengan nama tertentu.
+2. Jalankan script sql pada file create_table_dashboard.sql pada database tersebut.
+3. Jalankan script sql pada folder raw survei di database yang anda buat:
     - create_table_raw_survei.sql
     - insert_table_raw_survei.sql
-4. Edit pada file funcdash.py line ke-8 sesuai dengan postgres anda. (atur nama dbname, user, password)
+4. Buka file config.json pada folder config sesuai dengan postgres anda. (atur nama dbname, user, password)
 5. Run file cobadash.py
     Jika berhasil outputnya seperti ini
 
