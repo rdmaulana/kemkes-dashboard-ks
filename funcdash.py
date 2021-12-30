@@ -1111,7 +1111,8 @@ def specificDataKarakteristikResponden(cursor, id):  # fungsi ini untuk tambahan
 
 def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, current_date):  # fungsi ini untuk insert data pada table Karakteristik Responden
 
-    sql_insert_karakteristik_responden = "INSERT INTO public.karakteristik_responden values (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT " \
+    sql_insert_karakteristik_responden = "INSERT INTO public.karakteristik_responden values (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " \
+                                         "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT " \
                                          "(survei_individu_detail_id) DO UPDATE SET survei_individu_detail_id = excluded.survei_individu_detail_id, " \
                                          "survei_rumah_tangga_id = excluded.survei_rumah_tangga_id, survei_id = excluded.survei_id, provinsi_id = excluded.provinsi_id, " \
                                          "nama_provinsi = excluded.nama_provinsi, kota_kabupaten_id = excluded.kota_kabupaten_id, nama_kota_kabupaten = excluded.nama_kota_kabupaten, " \
@@ -1131,10 +1132,11 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
     # print(karakteristik_responden['created_at'])
     # umur_hari_ini = (karakteristik_responden['created_at'].year - karakteristik_responden['tanggal_lahir'].year)
 
+    umur = (current_date.year - karakteristik_responden['tanggal_lahir'].year)
+
     # Field UMUR HARI INI (TAHUN)
-    if karakteristik_responden['umur_tahun'] != 0:
-        umur_hari_ini = (current_date.year - karakteristik_responden['tanggal_lahir'].year)
-        # umur_hari_ini = 0
+    if umur != 0:
+        umur_hari_ini = umur
     else:
         umur_hari_ini = 0
 
@@ -1148,79 +1150,246 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
     if karakteristik_responden['umur_tahun'] < 5:
         umur_bulan_2 = karakteristik_responden['umur_tahun'] * 12 + karakteristik_responden['umur_bulan']
     else:
-        umur_bulan_2 = 0
+        umur_bulan_2 = None
 
         # Field Kategori Umur Bulan
-    if (karakteristik_responden['umur_bulan'] >= 0 and karakteristik_responden['umur_bulan'] <= 15):
-        kategori_umur_bulan = 1
-    elif (karakteristik_responden['umur_bulan'] >= 12 and karakteristik_responden['umur_bulan'] <= 23):
-        kategori_umur_bulan = 2
-    elif (karakteristik_responden['umur_bulan'] >= 24 and karakteristik_responden['umur_bulan'] <= 35):
-        kategori_umur_bulan = 3
-    elif (karakteristik_responden['umur_bulan'] >= 36 and karakteristik_responden['umur_bulan'] <= 47):
-        kategori_umur_bulan = 4
-    elif (karakteristik_responden['umur_bulan'] >= 48 and karakteristik_responden['umur_bulan'] <= 59):
-        kategori_umur_bulan = 5
+    if umur_tahun < 5:
+        if (karakteristik_responden['umur_bulan'] >= 0 and karakteristik_responden['umur_bulan'] <= 11):
+            kategori_umur_bulan = "0-11 bulan"
+        elif (karakteristik_responden['umur_bulan'] >= 12 and karakteristik_responden['umur_bulan'] <= 23):
+            kategori_umur_bulan = "12-23 bulan"
+        elif (karakteristik_responden['umur_bulan'] >= 24 and karakteristik_responden['umur_bulan'] <= 35):
+            kategori_umur_bulan = "24-35 bulan"
+        elif (karakteristik_responden['umur_bulan'] >= 36 and karakteristik_responden['umur_bulan'] <= 47):
+            kategori_umur_bulan = "36-47 bulan"
+        elif (karakteristik_responden['umur_bulan'] >= 48 and karakteristik_responden['umur_bulan'] <= 59):
+            kategori_umur_bulan = "48-59 bulan"
     else:
-        kategori_umur_bulan = 6
+        kategori_umur_bulan = ""
 
         # Field Kategori Umur Tahun
     if (karakteristik_responden['umur_tahun'] >= 5 and karakteristik_responden['umur_tahun'] <= 9):
-        kategori_umur_tahun = 1
+        kategori_umur_tahun = "5-9 tahun"
     elif (karakteristik_responden['umur_tahun'] >= 10 and karakteristik_responden['umur_tahun'] <= 14):
-        kategori_umur_tahun = 2
+        kategori_umur_tahun = "10-14 tahun"
     elif (karakteristik_responden['umur_tahun'] >= 15 and karakteristik_responden['umur_tahun'] <= 24):
-        kategori_umur_tahun = 3
+        kategori_umur_tahun = "15-24 tahun"
     elif (karakteristik_responden['umur_tahun'] >= 25 and karakteristik_responden['umur_tahun'] <= 34):
-        kategori_umur_tahun = 4
+        kategori_umur_tahun = "25-34 tahun"
     elif (karakteristik_responden['umur_tahun'] >= 35 and karakteristik_responden['umur_tahun'] <= 44):
-        kategori_umur_tahun = 5
+        kategori_umur_tahun = "35-44 tahun"
     elif (karakteristik_responden['umur_tahun'] >= 45 and karakteristik_responden['umur_tahun'] <= 54):
-        kategori_umur_tahun = 6
+        kategori_umur_tahun = "45-54 tahun"
     elif (karakteristik_responden['umur_tahun'] >= 55 and karakteristik_responden['umur_tahun'] <= 64):
-        kategori_umur_tahun = 7
+        kategori_umur_tahun = "55-64 tahun"
     elif karakteristik_responden['umur_tahun'] >= 65:
-        kategori_umur_tahun = 8
+        kategori_umur_tahun = "65 tahun keatas"
     else:
-        kategori_umur_tahun = None
+        kategori_umur_tahun = ""
 
         # Field Kategori Pendidikan
     if karakteristik_responden['pendidikan_id'] == 1:
-        pendidikan = 1
+        pendidikan = "Tidak/Belum Sekolah"
     elif karakteristik_responden['pendidikan_id'] == 2:
-        pendidikan = 2
+        pendidikan = "Belum Tamat SD/Sederajat"
     elif karakteristik_responden['pendidikan_id'] == 3:
-        pendidikan = 3
+        pendidikan = "Tamat SD/Sederajat"
     elif karakteristik_responden['pendidikan_id'] == 4:
-        pendidikan = 4
+        pendidikan = "SLTP/Sederajat"
     elif karakteristik_responden['pendidikan_id'] == 5:
-        pendidikan = 5
+        pendidikan = "SLTA/Sederajat"
     elif karakteristik_responden['pendidikan_id'] == 6:
-        pendidikan = 6
+        pendidikan = "Diploma I/II"
+    elif karakteristik_responden['pendidikan_id'] == 7:
+        pendidikan = "Diploma I/II"
+    elif karakteristik_responden['pendidikan_id'] == 8:
+        pendidikan = "Diploma I/II"
+    elif karakteristik_responden['pendidikan_id'] == 9:
+        pendidikan = "Diploma I/II"
+    elif karakteristik_responden['pendidikan_id'] == 10:
+        pendidikan = "Diploma I/II"
     else:
-        pendidikan = 7
+        pendidikan = ""
 
         # Field Kategori Pekerjaan
     if karakteristik_responden['pekerjaan_id'] == 1:
-        pekerjaan = 1
+        pekerjaan = 'Belum/Tidak Bekerja'
     elif karakteristik_responden['pekerjaan_id'] == 2:
-        pekerjaan = 2
+        pekerjaan = 'Mengurus Rumah Tangga'
     elif karakteristik_responden['pekerjaan_id'] == 3:
-        pekerjaan = 3
+        pekerjaan = 'Pelajar/Mahasiswa'
     elif karakteristik_responden['pekerjaan_id'] == 4:
-        pekerjaan = 4
+        pekerjaan = 'Pensiunan'
     elif karakteristik_responden['pekerjaan_id'] == 5:
-        pekerjaan = 5
+        pekerjaan = 'Pegawai Negeri Sipil (PNS)'
     elif karakteristik_responden['pekerjaan_id'] == 6:
-        pekerjaan = 6
+        pekerjaan = 'Tentara Nasional Indonesia (TNI)'
     elif karakteristik_responden['pekerjaan_id'] == 7:
-        pekerjaan = 7
+        pekerjaan = 'Kepolisian RI (POLRI)'
     elif karakteristik_responden['pekerjaan_id'] == 8:
-        pekerjaan = 8
+        pekerjaan = 'Perdagangan'
     elif karakteristik_responden['pekerjaan_id'] == 9:
-        pekerjaan = 9
-    else:
-        pekerjaan = 10
+        pekerjaan = 'Petani/Pekebun'
+    elif karakteristik_responden['pekerjaan_id'] == 10:
+        pekerjaan = 'Peternak'
+    elif karakteristik_responden['pekerjaan_id'] == 11:
+        pekerjaan = 'Nelayan/Perikanan'
+    elif karakteristik_responden['pekerjaan_id'] == 12:
+        pekerjaan = 'Industri'
+    elif karakteristik_responden['pekerjaan_id'] == 13:
+        pekerjaan = 'Konstruksi'
+    elif karakteristik_responden['pekerjaan_id'] == 14:
+        pekerjaan = 'Transportasi'
+    elif karakteristik_responden['pekerjaan_id'] == 15:
+        pekerjaan = 'Karyawan Swasta'
+    elif karakteristik_responden['pekerjaan_id'] == 16:
+        pekerjaan = 'Karyawan BUMN'
+    elif karakteristik_responden['pekerjaan_id'] == 17:
+        pekerjaan = 'Karyawan BUMD'
+    elif karakteristik_responden['pekerjaan_id'] == 18:
+        pekerjaan = 'Karyawan Honorer'
+    elif karakteristik_responden['pekerjaan_id'] == 19:
+        pekerjaan = 'Buruh Harian Lepas'
+    elif karakteristik_responden['pekerjaan_id'] == 20:
+        pekerjaan = 'Buruh Tani/Perkebunan'
+    elif karakteristik_responden['pekerjaan_id'] == 21:
+        pekerjaan = 'Buruh Nelayan/Perikanan'
+    elif karakteristik_responden['pekerjaan_id'] == 22:
+        pekerjaan = 'Buruh Peternakan'
+    elif karakteristik_responden['pekerjaan_id'] == 23:
+        pekerjaan = 'Pembantu Rumah Tangga'
+    elif karakteristik_responden['pekerjaan_id'] == 24:
+        pekerjaan = 'Tukang Cukur'
+    elif karakteristik_responden['pekerjaan_id'] == 25:
+        pekerjaan = 'Tukang Listrik'
+    elif karakteristik_responden['pekerjaan_id'] == 26:
+        pekerjaan = 'Tukang Batu'
+    elif karakteristik_responden['pekerjaan_id'] == 27:
+        pekerjaan = 'Tukang Kayu'
+    elif karakteristik_responden['pekerjaan_id'] == 28:
+        pekerjaan = 'Tukang Sol Sepatu'
+    elif karakteristik_responden['pekerjaan_id'] == 29:
+        pekerjaan = 'Tukang Las/Pandai Besi'
+    elif karakteristik_responden['pekerjaan_id'] == 30:
+        pekerjaan = 'Tukang Jahit'
+    elif karakteristik_responden['pekerjaan_id'] == 31:
+        pekerjaan = 'Tukang Gigi'
+    elif karakteristik_responden['pekerjaan_id'] == 32:
+        pekerjaan = 'Penata Rias'
+    elif karakteristik_responden['pekerjaan_id'] == 33:
+        pekerjaan = 'Penata Busana'
+    elif karakteristik_responden['pekerjaan_id'] == 34:
+        pekerjaan = 'Penata Rambut'
+    elif karakteristik_responden['pekerjaan_id'] == 35:
+        pekerjaan = 'Mekanik'
+    elif karakteristik_responden['pekerjaan_id'] == 36:
+        pekerjaan = 'Seniman'
+    elif karakteristik_responden['pekerjaan_id'] == 37:
+        pekerjaan = 'Tabib'
+    elif karakteristik_responden['pekerjaan_id'] == 38:
+        pekerjaan = 'Paraji'
+    elif karakteristik_responden['pekerjaan_id'] == 39:
+        pekerjaan = 'Perancang Busana'
+    elif karakteristik_responden['pekerjaan_id'] == 40:
+        pekerjaan = 'Penterjemah'
+    elif karakteristik_responden['pekerjaan_id'] == 41:
+        pekerjaan = 'Imam Masjid'
+    elif karakteristik_responden['pekerjaan_id'] == 42:
+        pekerjaan = 'Pendeta'
+    elif karakteristik_responden['pekerjaan_id'] == 43:
+        pekerjaan = 'Pastor'
+    elif karakteristik_responden['pekerjaan_id'] == 44:
+        pekerjaan = 'Wartawan'
+    elif karakteristik_responden['pekerjaan_id'] == 45:
+        pekerjaan = 'Ustadz/Mubaligh'
+    elif karakteristik_responden['pekerjaan_id'] == 46:
+        pekerjaan = 'Juru Masak'
+    elif karakteristik_responden['pekerjaan_id'] == 47:
+        pekerjaan = 'Promotor Acara'
+    elif karakteristik_responden['pekerjaan_id'] == 48:
+        pekerjaan = 'Anggota DPR-RI'
+    elif karakteristik_responden['pekerjaan_id'] == 49:
+        pekerjaan = 'Anggota DPD'
+    elif karakteristik_responden['pekerjaan_id'] == 50:
+        pekerjaan = 'Anggota BPK'
+    elif karakteristik_responden['pekerjaan_id'] == 51:
+        pekerjaan = 'Presiden'
+    elif karakteristik_responden['pekerjaan_id'] == 52:
+        pekerjaan = 'Wakil Presiden'
+    elif karakteristik_responden['pekerjaan_id'] == 53:
+        pekerjaan = 'Anggota Mahkamah Konstitusi'
+    elif karakteristik_responden['pekerjaan_id'] == 54:
+        pekerjaan = 'Anggota Kabinet/Kementrian'
+    elif karakteristik_responden['pekerjaan_id'] == 55:
+        pekerjaan = 'Duta Besar'
+    elif karakteristik_responden['pekerjaan_id'] == 56:
+        pekerjaan = 'Gubernur'
+    elif karakteristik_responden['pekerjaan_id'] == 57:
+        pekerjaan = 'Wakil Gubernur'
+    elif karakteristik_responden['pekerjaan_id'] == 58:
+        pekerjaan = 'Bupati'
+    elif karakteristik_responden['pekerjaan_id'] == 59:
+        pekerjaan = 'Wakil Bupati'
+    elif karakteristik_responden['pekerjaan_id'] == 60:
+        pekerjaan = 'Walikota'
+    elif karakteristik_responden['pekerjaan_id'] == 61:
+        pekerjaan = 'Wakil Walikota'
+    elif karakteristik_responden['pekerjaan_id'] == 62:
+        pekerjaan = 'Anggota DPRD Prop.'
+    elif karakteristik_responden['pekerjaan_id'] == 63:
+        pekerjaan = 'Anggota DPRD Kab./Kota'
+    elif karakteristik_responden['pekerjaan_id'] == 64:
+        pekerjaan = 'Dosen'
+    elif karakteristik_responden['pekerjaan_id'] == 65:
+        pekerjaan = 'Guru'
+    elif karakteristik_responden['pekerjaan_id'] == 66:
+        pekerjaan = 'Pilot'
+    elif karakteristik_responden['pekerjaan_id'] == 67:
+        pekerjaan = 'Pengacara'
+    elif karakteristik_responden['pekerjaan_id'] == 68:
+        pekerjaan = 'Notaris'
+    elif karakteristik_responden['pekerjaan_id'] == 69:
+        pekerjaan = 'Arsitek'
+    elif karakteristik_responden['pekerjaan_id'] == 70:
+        pekerjaan = 'Akuntan'
+    elif karakteristik_responden['pekerjaan_id'] == 71:
+        pekerjaan = 'Konsultan'
+    elif karakteristik_responden['pekerjaan_id'] == 72:
+        pekerjaan = 'Dokter'
+    elif karakteristik_responden['pekerjaan_id'] == 73:
+        pekerjaan = 'Bidan'
+    elif karakteristik_responden['pekerjaan_id'] == 74:
+        pekerjaan = 'Perawat'
+    elif karakteristik_responden['pekerjaan_id'] == 75:
+        pekerjaan = 'Apoteker'
+    elif karakteristik_responden['pekerjaan_id'] == 76:
+        pekerjaan = 'Psikiater/Psikolog'
+    elif karakteristik_responden['pekerjaan_id'] == 77:
+        pekerjaan = 'Penyiar Televisi'
+    elif karakteristik_responden['pekerjaan_id'] == 78:
+        pekerjaan = 'Penyiar Radio'
+    elif karakteristik_responden['pekerjaan_id'] == 79:
+        pekerjaan = 'Pelaut'
+    elif karakteristik_responden['pekerjaan_id'] == 80:
+        pekerjaan = 'Peneliti'
+    elif karakteristik_responden['pekerjaan_id'] == 81:
+        pekerjaan = 'Sopir'
+    elif karakteristik_responden['pekerjaan_id'] == 82:
+        pekerjaan = 'Pialang'
+    elif karakteristik_responden['pekerjaan_id'] == 83:
+        pekerjaan = 'Paranormal'
+    elif karakteristik_responden['pekerjaan_id'] == 84:
+        pekerjaan = 'Pedagang'
+    elif karakteristik_responden['pekerjaan_id'] == 85:
+        pekerjaan = 'Perangkat Desa'
+    elif karakteristik_responden['pekerjaan_id'] == 86:
+        pekerjaan = 'Kepala Desa'
+    elif karakteristik_responden['pekerjaan_id'] == 87:
+        pekerjaan = 'Biarawati'
+    elif karakteristik_responden['pekerjaan_id'] == 88:
+        pekerjaan = 'Wiraswasta'
+    elif karakteristik_responden['pekerjaan_id'] == 89:
+        pekerjaan = 'Lainnya'
 
     # Field Umur 5_sd_9 Tahun
     if kategori_umur_tahun == 1:
