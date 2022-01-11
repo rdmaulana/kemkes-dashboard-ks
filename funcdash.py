@@ -1212,9 +1212,7 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
         pendidikan = ""
 
         # Field Kategori Pekerjaan
-    if karakteristik_responden['pekerjaan_id'] == 0:
-        pekerjaan = 'Tidak Menajawab'
-    elif karakteristik_responden['pekerjaan_id'] == 1:
+    if karakteristik_responden['pekerjaan_id'] == 1:
         pekerjaan = 'Belum/Tidak Bekerja'
     elif karakteristik_responden['pekerjaan_id'] == 2:
         pekerjaan = 'Mengurus Rumah Tangga'
@@ -1392,6 +1390,8 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
         pekerjaan = 'Wiraswasta'
     elif karakteristik_responden['pekerjaan_id'] == 89:
         pekerjaan = 'Lainnya'
+    else:
+        pekerjaan = 'Tidak Menajawab'
 
     # Field Umur 5_sd_9 Tahun
     if kategori_umur_tahun == 1:
