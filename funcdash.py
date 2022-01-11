@@ -1154,15 +1154,15 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
 
         # Field Kategori Umur Bulan
     if umur_tahun < 5:
-        if (karakteristik_responden['umur_bulan'] >= 0 and karakteristik_responden['umur_bulan'] <= 11):
+        if (umur_bulan_2 >= 0 and umur_bulan_2 <= 11):
             kategori_umur_bulan = "0-11 bulan"
-        elif (karakteristik_responden['umur_bulan'] >= 12 and karakteristik_responden['umur_bulan'] <= 23):
+        elif (umur_bulan_2 >= 12 and umur_bulan_2 <= 23):
             kategori_umur_bulan = "12-23 bulan"
-        elif (karakteristik_responden['umur_bulan'] >= 24 and karakteristik_responden['umur_bulan'] <= 35):
+        elif (umur_bulan_2 >= 24 and umur_bulan_2 <= 35):
             kategori_umur_bulan = "24-35 bulan"
-        elif (karakteristik_responden['umur_bulan'] >= 36 and karakteristik_responden['umur_bulan'] <= 47):
+        elif (umur_bulan_2 >= 36 and umur_bulan_2 <= 47):
             kategori_umur_bulan = "36-47 bulan"
-        elif (karakteristik_responden['umur_bulan'] >= 48 and karakteristik_responden['umur_bulan'] <= 59):
+        elif (umur_bulan_2 >= 48 and umur_bulan_2 <= 59):
             kategori_umur_bulan = "48-59 bulan"
     else:
         kategori_umur_bulan = ""
@@ -1212,7 +1212,9 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
         pendidikan = ""
 
         # Field Kategori Pekerjaan
-    if karakteristik_responden['pekerjaan_id'] == 1:
+    if karakteristik_responden['pekerjaan_id'] == 0:
+        pekerjaan = 'Tidak Menajawab'
+    elif karakteristik_responden['pekerjaan_id'] == 1:
         pekerjaan = 'Belum/Tidak Bekerja'
     elif karakteristik_responden['pekerjaan_id'] == 2:
         pekerjaan = 'Mengurus Rumah Tangga'
