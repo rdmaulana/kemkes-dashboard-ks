@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS public.raw_survei
     survei_rt_jml_art_dewasa integer,
     survei_rt_jml_art_10_54_thn integer,
     survei_rt_jml_art_12_59_bln integer,
-    survei_rt_jml_art_0_11_bln_45 integer,
+    survei_rt_jml_art_0_11_bln integer,
     survei_rt_sab character(1) COLLATE pg_catalog."default",
     survei_rt_sat character(1) COLLATE pg_catalog."default",
     survei_rt_jk character(1) COLLATE pg_catalog."default",
