@@ -337,6 +337,24 @@ CREATE INDEX persalinan_di_faskes_PERSALINAN_TIDAK_DI_FASKES_idx
     (PERSALINAN_TIDAK_DI_FASKES ASC NULLS LAST)
     TABLESPACE pg_default;
 
+-- --------------------------------------------
+-- Table Structure for log
+-- --------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.log
+(
+    survei_individu_detail_id character varying(191) COLLATE pg_catalog."default" NOT NULL,
+    id_exist boolean,
+    execute_success boolean,
+    updated_at timestamp without time zone,
+    CONSTRAINT log_pkey PRIMARY KEY (survei_individu_detail_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.log
+    OWNER to postgres;
+
 -- CREATED BY ALDON
 
 -- CREATED BY DECA
@@ -1011,10 +1029,10 @@ CREATE TABLE IF NOT EXISTS public.KARAKTERISTIK_RESPONDEN
     UMUR_TAHUN	        int,
     UMURBULAN	        int,
     umur_bulan	            int,
-    kategori_umur_bulan character varying(30) COLLATE pg_catalog."default",
-    kategori_umur_tahun character varying(30) COLLATE pg_catalog."default",
-    kategori_pendidikan character varying(30) COLLATE pg_catalog."default",
-    kategori_pekerjaan character varying(30) COLLATE pg_catalog."default",
+    kategori_umur_bulan character varying(50) COLLATE pg_catalog."default",
+    kategori_umur_tahun character varying(50) COLLATE pg_catalog."default",
+    kategori_pendidikan character varying(50) COLLATE pg_catalog."default",
+    kategori_pekerjaan character varying(50) COLLATE pg_catalog."default",
     Umur_5_sd_9_tahun	    int,
     Umur_10_sd_14_tahun	    int,
     Umur_15_24_tahun	    int,

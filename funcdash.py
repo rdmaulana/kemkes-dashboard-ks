@@ -30,6 +30,16 @@ def readTXT(): # fungsi untuk membaca id pada file dengan format .txt
     return (id_from_text) # hasil membaca id pada file txt dikembalikan
 
 # ==============================
+#         Read ID SQL
+# ==============================
+
+def readSQL(cursor):
+    ID = "SELECT survei_individu_survei_individu_detail_id FROM public.raw_survei;"
+    cursor.execute(ID)
+    id_from_query = cursor.fetchall()
+    return id_from_query
+
+# ==============================
 #         Check ID
 # ==============================
 
@@ -387,7 +397,7 @@ def specificDataForIDL(cursor, id):
     if umur_tahun < 5:
         di5 = umur_tahun * 12 + umur_bulan  # Ini logic dipertanyakan dah
 
-    # print(di5) for debug
+
 
     if di5 >= 12 and di5 <= 23:
         MEMILIKI_BALITA_12_sd_23_BULAN = 1
@@ -467,7 +477,7 @@ def specificDataForAsiEksklusif(cursor, id):
     if umur_tahun < 5:
         di5 = umur_tahun * 12 + umur_bulan  # Ini logic dipertanyakan dah
 
-    # print(di5) for debug
+
 
     if di5 >= 12 and di5 <= 23:
         MEMILIKI_BAYI_7_sd_23_BULAN = 1
@@ -546,7 +556,7 @@ def specificDataForTumbuhKembang(cursor, id):
     if umur_tahun < 5:
         di5 = umur_tahun * 12 + umur_bulan  # Ini logic dipertanyakan dah
 
-    # print(di5) for debug
+    
 
     if di5 >= 12 and di5 <= 23:
         USIA_2_sd_59_BULAN = 1
@@ -1127,12 +1137,12 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
                                          "umur_35_44_tahun = excluded.umur_35_44_tahun, umur_45_54_tahun = excluded.umur_45_54_tahun, " \
                                          "umur_55_64_tahun = excluded.umur_55_64_tahun, umur_65_tahun_keatas = excluded.umur_65_tahun_keatas, updated_at = excluded.updated_at;"
 
+    try:
 
-    # print(karakteristik_responden['tanggal_lahir'])
-    # print(karakteristik_responden['created_at'])
-    # umur_hari_ini = (karakteristik_responden['created_at'].year - karakteristik_responden['tanggal_lahir'].year)
+        umur = (current_date.year - karakteristik_responden['tanggal_lahir'].year)
 
-    umur = (current_date.year - karakteristik_responden['tanggal_lahir'].year)
+    except Exception as e:
+        umur = -1
 
     # Field UMUR HARI INI (TAHUN)
     if umur != 0:
@@ -1153,19 +1163,18 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
         umur_bulan_2 = None
 
         # Field Kategori Umur Bulan
-    if umur_tahun < 5:
-        if (umur_bulan_2 >= 0 and umur_bulan_2 <= 11):
-            kategori_umur_bulan = "0-11 bulan"
-        elif (umur_bulan_2 >= 12 and umur_bulan_2 <= 23):
-            kategori_umur_bulan = "12-23 bulan"
-        elif (umur_bulan_2 >= 24 and umur_bulan_2 <= 35):
-            kategori_umur_bulan = "24-35 bulan"
-        elif (umur_bulan_2 >= 36 and umur_bulan_2 <= 47):
-            kategori_umur_bulan = "36-47 bulan"
-        elif (umur_bulan_2 >= 48 and umur_bulan_2 <= 59):
-            kategori_umur_bulan = "48-59 bulan"
+    if umur_tahun < 5 and umur_bulan_2 >= 0 and umur_bulan_2 <= 11:
+        kategori_umur_bulan = "0-11 bulan"
+    elif umur_tahun < 5 and umur_bulan_2 >= 12 and umur_bulan_2 <= 23:
+        kategori_umur_bulan = "12-23 bulan"
+    elif umur_tahun < 5 and umur_bulan_2 >= 24 and umur_bulan_2 <= 35:
+        kategori_umur_bulan = "24-35 bulan"
+    elif umur_tahun < 5 and umur_bulan_2 >= 36 and umur_bulan_2 <= 47 :
+        kategori_umur_bulan = "36-47 bulan"
+    elif umur_tahun < 5 and umur_bulan_2 >= 48 and umur_bulan_2 <= 59:
+        kategori_umur_bulan = "48-59 bulan"
     else:
-        kategori_umur_bulan = ""
+        kategori_umur_bulan = "Unknown"
 
         # Field Kategori Umur Tahun
     if (karakteristik_responden['umur_tahun'] >= 5 and karakteristik_responden['umur_tahun'] <= 9):
@@ -1394,49 +1403,49 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
         pekerjaan = 'Tidak Menajawab'
 
     # Field Umur 5_sd_9 Tahun
-    if kategori_umur_tahun == 1:
+    if kategori_umur_tahun == "5-9 tahun":
         umur_5_sd_9_tahun = 1
     else:
         umur_5_sd_9_tahun = 0
 
     # Field Umur 10_sd_14 Tahun
-    if kategori_umur_tahun == 2:
+    if kategori_umur_tahun == "10-14 tahun":
         umur_10_sd_9_tahun = 1
     else:
         umur_10_sd_9_tahun = 0
 
     # Field Umur 15_sd_24 Tahun
-    if kategori_umur_tahun == 3:
+    if kategori_umur_tahun == "15-24 tahun":
         umur_15_sd_24_tahun = 1
     else:
         umur_15_sd_24_tahun = 0
 
     # Field Umur 25_sd_34 Tahun
-    if kategori_umur_tahun == 4:
+    if kategori_umur_tahun == "25-34 tahun":
         umur_25_sd_34_tahun = 1
     else:
         umur_25_sd_34_tahun = 0
 
     # Field Umur 35_sd_44 Tahun
-    if kategori_umur_tahun == 5:
+    if kategori_umur_tahun == "35-44 tahun":
         umur_35_sd_44_tahun = 1
     else:
         umur_35_sd_44_tahun = 0
 
     # Field Umur 45_sd_54 Tahun
-    if kategori_umur_tahun == 6:
+    if kategori_umur_tahun == "45-54 tahun":
         umur_45_sd_54_tahun = 1
     else:
         umur_45_sd_54_tahun = 0
 
     # Field Umur 55_sd_64 Tahun
-    if kategori_umur_tahun == 7:
+    if kategori_umur_tahun == "55-64 tahun":
         umur_55_sd_64_tahun = 1
     else:
         umur_55_sd_64_tahun = 0
 
     # Field Umur 65 Tahun Keatas
-    if kategori_umur_tahun == 8:
+    if kategori_umur_tahun == "65 tahun keatas":
         umur_65_tahun_keatas = 0
     else:
         umur_65_tahun_keatas = 0
@@ -1678,6 +1687,7 @@ def insertDataRokokByProgram(db_conn, cursor, rokok_by_program):  # fungsi ini u
 
     # variabel val adalah data yang akan di input
     cursor.execute(sql_insert_rokok_by_program, val)
+    cursor.execute("ROLLBACK")
     db_conn.commit()
 
     return (rokok_by_program['survei_individu_detail_id'])  # cuman variabel kontrol aja
@@ -1945,6 +1955,35 @@ def insertDataKBbyProgram(db_conn, cursor, KB_by_Program):
     db_conn.commit()
 
     return (KB_by_Program['survei_individu_detail_id'])  # cuman variabel kontrol aja
+
+# ==============================
+#     Insert / update log
+# ==============================
+
+def insertUpdateLog(db_conn, cursor, survei_individu_detail_id, id_exist, execute_success, updated_at):
+    sql_insert_update_log = "INSERT INTO public.log values (%s,%s, %s,%s) ON CONFLICT (survei_individu_detail_id) DO UPDATE SET " \
+                            "survei_individu_detail_id = excluded.survei_individu_detail_id, id_exist = excluded.id_exist, execute_success = excluded.execute_success," \
+                            "updated_at = excluded.updated_at;"
+    val = (survei_individu_detail_id, id_exist, execute_success, updated_at)
+    cursor.execute(sql_insert_update_log, val)
+    db_conn.commit()
+
+# ==============================
+#       Cek Umur
+# ==============================
+
+def cekUmur(cursor, id_individu):
+    sql_cek_umur = "SELECT survei_individu_umur_thn, survei_individu_umur_thn FROM public.raw_survei where survei_individu_survei_individu_detail_id = %s"
+
+    cursor.execute(sql_cek_umur, (id_individu,))
+    data_cek = cursor.fetchone()
+
+    if data_cek == None:
+        return 404
+    elif data_cek[0] == None and data_cek[1] == None:
+        return 400
+
+    return 200
 
 # ==============================
 #       Close DB

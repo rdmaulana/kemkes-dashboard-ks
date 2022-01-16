@@ -1,14 +1,19 @@
 from datetime import date
 
+import datetime
+
 from funcdash import *
 
-def main(db_conn, cursor, id_individu, id_ada, id_tidak_ada):
+def main(db_conn, cursor, id_individu, id_ada, id_gagal):
     # tanggal sekarang untuk created_at
     current_date = date.today()
 
-    status_id = checkIdSurveiIndividu(cursor, id_individu)
+    print(f"id {id_individu} diproses")
 
-    if status_id == 1:
+    status_id = checkIdSurveiIndividu(cursor, id_individu)
+    status_umur = cekUmur(cursor, id_individu)
+
+    if status_id == 1 and status_umur == 200:
         template_data = templateData(cursor, id_individu, current_date)
         # fungsi ini digunakan untuk template data yang akan digunakan pada semua table. Ini data pada field tambahan yang ada pada seluruh table
         # fungsi ini dikasih paramater karena data diambil berdasarkan id_individu
@@ -227,28 +232,48 @@ def main(db_conn, cursor, id_individu, id_ada, id_tidak_ada):
 
         #     Created By Deca
 
-        id_ada.append(id_individu)
+        id_ada += 1
+        print(f"id {id_individu} berhasil, Jumlah id yang berhasil diproses : {id_ada}")
+        insertUpdateLog(db_conn, cursor, id_individu, True, True, time.strftime("%a, %d %b %Y %H:%M:%S"))
 
     else:
-        id_tidak_ada.append(id_individu)
+        id_gagal += 1
+        print(f"id {id_individu} tidak dapat diproses, Jumlah id yang gagal diproses : {id_gagal}")
+        exist = False
+        if status_umur == 400:
+            exist = True
+        insertUpdateLog(db_conn, cursor, id_individu, exist, False, time.strftime("%a, %d %b %Y %H:%M:%S"))
 
-    return (id_ada, id_tidak_ada)
+    return (id_ada, id_gagal)
 
 
-id_ada = []
-id_tidak_ada = []
-readID = readTXT()  # fungsi ini untuk membaca id pada file txt
+id_ada = 0
+id_gagal = 0
+start = datetime.datetime.now()
 
 connect = connectDB()
 db_conn = connect[0]
 cursor = connect[1]
 
-for id_individu in readID:
-    res = main(db_conn, cursor, id_individu, id_ada, id_tidak_ada)  # fungsi main akan dipanggil sebanyak id yang tertera pada file txt
+id = readSQL(cursor)
+for x in id:
+    for id_individu in x:
+        res = main(db_conn, cursor, id_individu, id_ada, id_gagal)  # fungsi main akan dipanggil sebanyak id yang tertera pada file txt
+        id_ada = res[0]
+        id_gagal = res[1]
+
+# readID = readTXT()  # fungsi ini untuk membaca id pada file txt
+# for id_individu in readID:
+#     res = main(db_conn, cursor, id_individu, id_ada, id_gagal)  # fungsi main akan dipanggil sebanyak id yang tertera pada file txt
+#     id_ada = res[0]
+#     id_gagal = res[1]
 
 closeDB(db_conn, cursor)
+finish = datetime.datetime.now()
 
-print(f"{len(res[0])} id yang diproses = {res[0]}")
-print(f"{len(res[1])} id yang tidak dapat diproses = {res[1]}")
 print()
+print(f"Jumlah id yang berhasil diproses = {res[0]}")
+print(f"Jumlah id yang gagal diproses = {res[1]}")
+print()
+print(f"Lama Proses {finish - start}")
 
