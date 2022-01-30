@@ -40,8 +40,5 @@ Langkah - Langkah menjalankan program :
     - insert_table_raw_survei.sql
 4. Buka file config.json pada folder config sesuai dengan postgres anda. (atur nama dbname, user, password)
 5. Run file cobadash.py
-    Jika berhasil outputnya seperti ini
-
-    1 id yang diproses = ['acc44eb7-2f0d-5f10-88b4-f357e9f289f1']
-    2 id yang tidak dapat diproses = ['ae', 'ed']
-
+    - Buka terminal di OS anda
+    - Jalankan program dengan statement (python main.py tanggal awal tanggal akhir) --> contoh : python cobadash.py 2019-01-01 2019-12-31
