@@ -270,8 +270,7 @@ closeDB(db_conn, cursor)
 finish = datetime.datetime.now()
 
 print()
-print(f"Jumlah id yang berhasil diproses = {res[0]}")
-print(f"Jumlah id yang gagal diproses = {res[1]}")
+print(f"Jumlah id yang berhasil diproses = {id_ada}")
+print(f"Jumlah id yang gagal diproses = {id_gagal}")
 print()
 print(f"Lama Proses {finish - start}")
-
