@@ -20,21 +20,13 @@ def connectDB():
     return (db_conn, cursor)
 
 # ==============================
-#         Read ID
-# ==============================
-
-def readTXT(): # fungsi untuk membaca id pada file dengan format .txt
-    id_txt = open("id.txt", "r")  # membaca file id.txt yang berisi id_individu yang akan diproses
-    id_from_text = id_txt.read().split('\n') # id_individu akan dibaca dengan dipisah antara baris
-    id_txt.close()
-    return (id_from_text) # hasil membaca id pada file txt dikembalikan
-
-# ==============================
 #         Read ID SQL
 # ==============================
 
-def readSQL(cursor):
-    ID = "SELECT survei_individu_survei_individu_detail_id FROM public.raw_survei;"
+def readSQL(cursor, waktu):
+    ID = "SELECT survei_individu_survei_individu_detail_id FROM public.raw_survei where survei_individu_created_at " \
+         "BETWEEN '%s' AND '%s' OR survei_individu_updated_at BETWEEN '%s' AND '%s' ORDER BY " \
+         "survei_individu_created_at;" % (waktu[1], waktu[2], waktu[1], waktu[2])
     cursor.execute(ID)
     id_from_query = cursor.fetchall()
     return id_from_query

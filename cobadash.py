@@ -4,6 +4,9 @@ import datetime
 
 from funcdash import *
 
+import sys
+
+
 def main(db_conn, cursor, id_individu, id_ada, id_gagal):
     # tanggal sekarang untuk created_at
     current_date = date.today()
@@ -255,18 +258,13 @@ connect = connectDB()
 db_conn = connect[0]
 cursor = connect[1]
 
-id = readSQL(cursor)
+id = readSQL(cursor, sys.argv)
 for x in id:
     for id_individu in x:
         res = main(db_conn, cursor, id_individu, id_ada, id_gagal)  # fungsi main akan dipanggil sebanyak id yang tertera pada file txt
         id_ada = res[0]
         id_gagal = res[1]
 
-# readID = readTXT()  # fungsi ini untuk membaca id pada file txt
-# for id_individu in readID:
-#     res = main(db_conn, cursor, id_individu, id_ada, id_gagal)  # fungsi main akan dipanggil sebanyak id yang tertera pada file txt
-#     id_ada = res[0]
-#     id_gagal = res[1]
 
 closeDB(db_conn, cursor)
 finish = datetime.datetime.now()
