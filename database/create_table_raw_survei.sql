@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS public.raw_survei
 (
     survei_survei_id character varying(191) COLLATE pg_catalog."default" NOT NULL,
-    survei_tanggal date NOT NULL,
+    survei_tanggal date,
     survei_no_urut_rt character varying(191) COLLATE pg_catalog."default" NOT NULL,
     survei_no_urut_kel character varying(191) COLLATE pg_catalog."default" NOT NULL,
     survei_surveyor character varying(191) COLLATE pg_catalog."default",
