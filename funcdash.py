@@ -1965,7 +1965,7 @@ def insertUpdateLog(db_conn, cursor, survei_individu_detail_id, id_exist, execut
 # ==============================
 
 def cekUmur(cursor, id_individu):
-    sql_cek_umur = "SELECT survei_individu_umur_thn, survei_individu_umur_thn FROM public.raw_survei where survei_individu_survei_individu_detail_id = %s"
+    sql_cek_umur = "SELECT survei_individu_umur_thn, survei_individu_umur_bln FROM public.raw_survei where survei_individu_survei_individu_detail_id = %s"
 
     cursor.execute(sql_cek_umur, (id_individu,))
     data_cek = cursor.fetchone()
