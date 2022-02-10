@@ -1166,7 +1166,7 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
     elif umur_tahun < 5 and umur_bulan_2 >= 48 and umur_bulan_2 <= 59:
         kategori_umur_bulan = "48-59 bulan"
     else:
-        kategori_umur_bulan = "Unknown"
+        kategori_umur_bulan = ""
 
         # Field Kategori Umur Tahun
     if (karakteristik_responden['umur_tahun'] >= 5 and karakteristik_responden['umur_tahun'] <= 9):
