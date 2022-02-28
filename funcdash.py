@@ -1438,7 +1438,7 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
 
     # Field Umur 65 Tahun Keatas
     if kategori_umur_tahun == "65 tahun keatas":
-        umur_65_tahun_keatas = 0
+        umur_65_tahun_keatas = 1
     else:
         umur_65_tahun_keatas = 0
 
