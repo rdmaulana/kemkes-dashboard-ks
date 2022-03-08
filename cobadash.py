@@ -2,12 +2,34 @@ from datetime import date
 
 import datetime
 
-from funcdash import *
-
 import sys
 
+from src.connection_db import *
+from src.cek_data import *
+from src.template_data import *
+from src.sasaran_life_cycle_spm import *
+from src.gabung_data import *
+from src.keluarga_berencana import *
+from src.persalinan_di_faskes import *
+from src.imunisasi_dasar_lengkap import *
+from src.asi_eksklusif import *
+from src.tumbuh_kembang import *
+from src.tb_paru import *
+from src.rokok import *
+from src.jkn import *
+from src.perilaku_sab import *
+from src.perilaku_jamban import *
+from src.hipertensi import *
+from src.karakteristik_responden import *
+from src.rokoks import *
+from src.rokok_by_program import *
+from src.rokok_by_program_umur import *
+from src.denominator_kb import *
+from src.kb_by_program import *
+from src.log import *
 
-def main(db_conn, cursor, id_individu, id_ada, id_gagal):
+
+def dashboard(db_conn, cursor, id_individu, id_ada, id_gagal):
     # tanggal sekarang untuk created_at
     current_date = date.today()
 
@@ -17,7 +39,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
     status_umur = cekUmur(cursor, id_individu)
 
     if status_id == 1 and status_umur == 200:
-        template_data = templateData(cursor, id_individu, current_date)
+        template_data = ambil_data_template(cursor, id_individu)
         # fungsi ini digunakan untuk template data yang akan digunakan pada semua table. Ini data pada field tambahan yang ada pada seluruh table
         # fungsi ini dikasih paramater karena data diambil berdasarkan id_individu
         # variabel template_data akan digunakan untuk seluruh table jadi jangan diapa-apain
@@ -37,7 +59,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
         # fungsi ini digunakan untuk menggabungkan template data dan data_for_sasaran_life_cycle_spm jadi parameternya dua itu
         # variabel sasaran_life_cycle_spm adalah record untuk table SASARAN LIFE CYCLE SPM
 
-        insertSLCS = insertDataSasaranLifeCycleSpm(db_conn, cursor, sasaran_life_cycle_spm)
+        insertDataSasaranLifeCycleSpm(db_conn, cursor, sasaran_life_cycle_spm)
         # fungsi ini untuk memasukkan data ke table SASARAN LIFE CYCLE SPM sehingga paraneternya adalah SASARAN LIFE CYCLE SPM
 
         # print(f"id : {insertSLCS} berhasil masuk tabel SLCS") # cetak hasil aja. buat kontrol. boleh dihapus line ini.
@@ -50,7 +72,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         keluarga_berencana = gabungData(template_data, data_for_keluarga_berencana)
 
-        insertKB = insertDataKeluargaBerencana(db_conn, cursor, keluarga_berencana)
+        insertDataKeluargaBerencana(db_conn, cursor, keluarga_berencana)
         # print(f"id : {insertKB} berhasil masuk tabel KB") # cetak hasil aja. buat kontrol. boleh dihapus line ini.
 
         # ==============================
@@ -61,7 +83,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         persalinan_di_faskes = gabungData(template_data, data_for_persalinan_di_faskes)
 
-        insertPdF = insertDataPersalinanDiFaskes(db_conn, cursor, persalinan_di_faskes)
+        insertDataPersalinanDiFaskes(db_conn, cursor, persalinan_di_faskes)
 
         # print(f"id : {insertPdF} berhasil masuk tabel Pdf") # cetak hasil aja. buat kontrol. boleh dihapus line ini.
 
@@ -77,7 +99,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         imunisasi_dasar_lengkap = gabungData(template_data, data_for_IDL)
 
-        insertIDL = insertDataIDL(db_conn, cursor, imunisasi_dasar_lengkap)
+        insertDataIDL(db_conn, cursor, imunisasi_dasar_lengkap)
 
         # ==============================
         #        Asi Eksklusif
@@ -87,7 +109,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         Asi_Eksklusif = gabungData(template_data, data_for_Asi_Eksklusif)
 
-        insert_Asi_Eksklusif = insertDataAsiEksklusif(db_conn, cursor, Asi_Eksklusif)
+        insertDataAsiEksklusif(db_conn, cursor, Asi_Eksklusif)
 
         # ==============================
         #       Tumbuh Kembang
@@ -97,7 +119,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         tumbuh_kembang = gabungData(template_data, data_for_tumbuh_kembang)
 
-        insert_tumbuh_kembang = insertDataTumbuhKembang(db_conn, cursor, tumbuh_kembang)
+        insertDataTumbuhKembang(db_conn, cursor, tumbuh_kembang)
 
         # ==============================
         #           TB Paru
@@ -107,7 +129,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         TB_Paru = gabungData(template_data, data_for_TB_Paru)
 
-        insert_TB_Paru = insertDataTBParu(db_conn, cursor, TB_Paru)
+        insertDataTBParu(db_conn, cursor, TB_Paru)
 
         # ==============================
         #            Rokok
@@ -117,7 +139,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         Rokok = gabungData(template_data, data_for_Rokok)
 
-        insert_Rokok = insertDataRokok(db_conn, cursor, Rokok)
+        insertDataRokok(db_conn, cursor, Rokok)
 
         # ==============================
         #             JKN
@@ -127,7 +149,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         JKN = gabungData(template_data, data_for_JKN)
 
-        insert_JKN = insertDataJKN(db_conn, cursor, JKN)
+        insertDataJKN(db_conn, cursor, JKN)
         # ==============================
         #        Perilaku SAB
         # ==============================
@@ -136,7 +158,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         Perilaku_SAB = gabungData(template_data, data_for_Perilaku_SAB)
 
-        insert_Perilaku_SAB = insertDataPerilakuSAB(db_conn, cursor, Perilaku_SAB)
+        insertDataPerilakuSAB(db_conn, cursor, Perilaku_SAB)
 
         # ==============================
         #       Perilaku Jamban
@@ -146,7 +168,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         Perilaku_Jamban = gabungData(template_data, data_for_Perilaku_Jamban)
 
-        insert_Perilaku_Jamban = insertDataPerilakuJamban(db_conn, cursor, Perilaku_Jamban)
+        insertDataPerilakuJamban(db_conn, cursor, Perilaku_Jamban)
 
         #     Created By Deca
 
@@ -160,7 +182,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         Hipertensi = gabungData(template_data, data_for_Hipertensi)
 
-        insert_Hipertensi = insertDataHipertensi(db_conn, cursor, Hipertensi)
+        insertDataHipertensi(db_conn, cursor, Hipertensi)
 
         # ==============================
         #           ROKOkS
@@ -170,7 +192,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         ROKOkS = gabungData(template_data, data_for_ROKOkS)
 
-        insert_ROKOkS = insertDataROKOkS(db_conn, cursor, ROKOkS)
+        insertDataROKOkS(db_conn, cursor, ROKOkS)
 
         #     Created By Vianto
 
@@ -184,7 +206,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         karakteristik_responden = gabungData(template_data, data_for_karakteristik_responden)
 
-        insert_karakteristik_responden = insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, current_date)
+        insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, current_date)
 
         #     Created By Aldi
 
@@ -198,7 +220,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         rokok_by_program = gabungData(template_data, data_for_rokok_by_program)
 
-        insertRBP = insertDataRokokByProgram(db_conn, cursor, rokok_by_program)
+        insertDataRokokByProgram(db_conn, cursor, rokok_by_program)
 
         # ==============================
         #    Rokok by prorgram (Umur)
@@ -218,7 +240,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         denominator_KB = gabungData(template_data, data_for_rokok_by_denominator_KB)
 
-        insertDKB = insertDataDenominatorKB(db_conn, cursor, denominator_KB)
+        insertDataDenominatorKB(db_conn, cursor, denominator_KB)
 
         #     Created By Aldon
 
@@ -231,7 +253,7 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
 
         KB_by_Program = gabungData(template_data, data_for_KB_by_Program)
 
-        insert_KB_by_Program = insertDataKBbyProgram(db_conn, cursor, KB_by_Program)
+        insertDataKBbyProgram(db_conn, cursor, KB_by_Program)
 
         #     Created By Deca
 
@@ -247,23 +269,19 @@ def main(db_conn, cursor, id_individu, id_ada, id_gagal):
             exist = True
         insertUpdateLog(db_conn, cursor, id_individu, exist, False, time.strftime("%a, %d %b %Y %H:%M:%S"))
 
-    return (id_ada, id_gagal)
+    return id_ada, id_gagal
 
 
 id_ada = 0
 id_gagal = 0
 start = datetime.datetime.now()
 
-connect = connectDB()
-db_conn = connect[0]
-cursor = connect[1]
+db_conn, cursor = connect_db()
 
 id = readSQL(cursor, sys.argv)
 for x in id:
     for id_individu in x:
-        res = main(db_conn, cursor, id_individu, id_ada, id_gagal)  # fungsi main akan dipanggil sebanyak id yang tertera pada file txt
-        id_ada = res[0]
-        id_gagal = res[1]
+        id_ada, id_gagal = dashboard(db_conn, cursor, id_individu, id_ada, id_gagal)  # fungsi main akan dipanggil sebanyak id yang tertera pada file txt
 
 
 closeDB(db_conn, cursor)
