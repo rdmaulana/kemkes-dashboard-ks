@@ -115,13 +115,13 @@ def insertDataKarakteristikResponden(db_conn, cursor, karakteristik_responden, c
     elif karakteristik_responden['pendidikan_id'] == 6:
         pendidikan = "Diploma I/II"
     elif karakteristik_responden['pendidikan_id'] == 7:
-        pendidikan = "Diploma I/II"
+        pendidikan = "Akademi/Diploma III/ Sarjana Muda"
     elif karakteristik_responden['pendidikan_id'] == 8:
-        pendidikan = "Diploma I/II"
+        pendidikan = "Diploma IV/Strata I"
     elif karakteristik_responden['pendidikan_id'] == 9:
-        pendidikan = "Diploma I/II"
+        pendidikan = "Strata-II"
     elif karakteristik_responden['pendidikan_id'] == 10:
-        pendidikan = "Diploma I/II"
+        pendidikan = "Strata III"
     else:
         pendidikan = ""
 
