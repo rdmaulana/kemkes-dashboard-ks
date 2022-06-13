@@ -15,9 +15,10 @@ Catatan :
 
 Tools yang dibutuhkan :
 
-1. Python atleast version 3
-2. Postgres
-3. Postman
+1. Operating System     = linux ubuntu 21.04
+2. Bahasa pemrograman   = python (3.9.5)
+3. Database 		= postgres(13.5)
+4. Text Editor          (VScode, Pycharm, Sublime, Notepad DLL)
 
 ## Library pyhton yang dibutuhkan
 
@@ -47,5 +48,4 @@ Tools yang dibutuhkan :
 1. Run file cobadash.py
 - Buka terminal di OS anda
 - Jalankan program dengan statement (python main.py tanggal awal tanggal akhir)
-    contoh : python cobadash.py 2019-01-01 2019-12-31 (Windows)
     contoh : python3 cobadash.py 2019-01-01 2019-12-31 (Linux)
